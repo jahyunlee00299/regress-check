@@ -1,0 +1,33 @@
+[project]
+name = "regress-check"
+dynamic = ["version"]
+description = "Freeze the critical numbers your model produced and fail when one moves, when a tolerance is loosened to get green, or when a freeze has no recorded reason."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+dependencies = []
+authors = [{ name = "jahyunlee00299" }]
+keywords = ["regression", "golden", "tolerance", "reproducibility", "numerical"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Testing",
+]
+
+[project.scripts]
+regress-check = "regress_check.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["regress_check"]
+
+[tool.setuptools.dynamic]
+version = { attr = "regress_check.__version__" }
