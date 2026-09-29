@@ -1,0 +1,8 @@
+- id: regress-check
+  name: regress-check
+  description: Fail when a frozen critical number moved, or a tolerance was widened without a recorded re-freeze.
+  entry: regress-check check
+  language: python
+  pass_filenames: false
+  always_run: false
+  files: '(regress\.toml|regress\.lock\.json)$'
