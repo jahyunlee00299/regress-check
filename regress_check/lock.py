@@ -31,7 +31,29 @@ def read_lock(path: Path, *, missing_ok: bool = False) -> dict[str, Any]:
         or not isinstance(data.get("goldens"), dict)
     ):
         raise CannotCheck(f"lock has an unexpected shape: {path.name}", rule="lock")
+    for gid, entry in data["goldens"].items():
+        problem = _entry_problem(entry)
+        if problem:
+            raise CannotCheck(f"lock entry '{gid}' is malformed in {path.name}: {problem}", rule="lock")
     return data
+
+
+def _is_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def _entry_problem(entry: Any) -> str | None:
+    """A hand-edited or truncated lock must read as 'cannot check' (exit 2), never as a traceback (exit 1)."""
+    if not isinstance(entry, dict):
+        return "not an object"
+    for key in ("expected", "rtol", "atol"):
+        if key not in entry:
+            return f"missing '{key}'"
+        if not _is_number(entry[key]):
+            return f"'{key}' is not a number"
+    if not isinstance(entry.get("history"), list):
+        return "missing or non-list 'history'"
+    return None
 
 
 def write_lock(path: Path, data: dict[str, Any]) -> None:
